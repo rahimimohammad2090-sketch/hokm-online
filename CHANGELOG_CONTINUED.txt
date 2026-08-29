@@ -1,0 +1,15 @@
+Production continuation — completed on the existing v37 project
+
+- Secret Manager compatible AUTH_SECRET_FILE loader.
+- Production TLS certificate/key file validation.
+- HTTPS production health/readiness server bootstrap.
+- Redis idempotency conflict detection hardened.
+- Production deployment Dockerfile.
+- CI workflow definition for full regression + load/deploy checks.
+- Production release runbook and backup/restore plan.
+- Deterministic 2,000-action gateway load test.
+- Deployment configuration/secret/TLS automated tests.
+- Existing v30-v37 regression suite remains green.
+
+Not falsely marked complete: real external Postgres/Redis, real certificates, external Secret Manager,
+centralized monitoring, backups and CI execution require an actual staging/production environment.

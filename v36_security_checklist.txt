@@ -1,0 +1,14 @@
+v36 Security Checklist
+[ ] AUTH_SECRET از environment/secret manager
+[ ] TLS در production
+[ ] session TTL فعال
+[ ] RBAC قبل از اجرای game action
+[ ] seat ownership قبل از اجرای action
+[ ] actionId و seq یکتا و صعودی
+[ ] payload size limit
+[ ] sanitization برای رشته‌های ورودی
+[ ] audit برای ACCEPT/REJECT
+[ ] persistence بعد از پذیرش action
+[ ] rate limiting v33 حفظ شود
+[ ] recovery/persistence v34 حفظ شود
+[ ] تست‌های v35 و v36 قبل از deploy اجرا شوند

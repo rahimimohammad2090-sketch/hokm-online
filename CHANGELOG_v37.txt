@@ -1,0 +1,10 @@
+Hokm Online v37
+- Production hardening و Release Candidate
+- ReplayGuard همزمانی per-user را کنترل می‌کند
+- actionId/seq فقط بعد از موفقیت apply ثبت می‌شوند
+- retry امن بعد از شکست game action
+- حفظ rate limiting نسخه 33
+- کنترل persistence failure و rollback اختیاری
+- audit با latency و counters
+- production config validation برای AUTH_SECRET و TLS
+- تست‌های concurrency، replay، retry، RBAC، persistence و audit

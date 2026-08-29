@@ -1,0 +1,13 @@
+{
+  "version": "19v",
+  "endpoints": {
+    "health": "GET /health",
+    "roomCreate": "POST /api/rooms",
+    "roomJoin": "POST /api/rooms/:code/join",
+    "roomState": "GET /api/rooms/:code"
+  },
+  "room": {
+    "maxPlayers": 4,
+    "codeLength": 6
+  }
+}

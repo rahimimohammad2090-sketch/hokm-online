@@ -1,0 +1,3 @@
+const {HokmGame}=require('./v30_hokm_engine');
+function restoreSnapshot(s){if(!s||!s.__v32Snapshot)throw Error('INVALID_SNAPSHOT');const g=Object.create(HokmGame.prototype);Object.assign(g,s);return g}
+function recover(store,id,players){const s=store.loadSnapshot(id);if(s)return restoreSnapshot(s);const g=new HokmGame({matchId:id,players,rng:()=>.5});for(const e of store.readEvents(id)){if(e.type==='GAME_STARTED')g.start();else if(e.type==='TRUMP_SET')g.setTrump(e.payload.seat,e.payload.suit);else if(e.type==='CARD_PLAYED')g.playCard(e.payload.seat,e.payload.card)}return g}module.exports={recover,restoreSnapshot};

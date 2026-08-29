@@ -1,0 +1,15 @@
+Hokm Online v31
+
+- اتصال WebSocket واقعی به موتور حکم
+- GAME_CONNECTED
+- PLAYER_CONNECTION
+- GAME_STARTED
+- STATE
+- CARD_PLAYED
+- TRICK_WON
+- HAND_FINISHED
+- reconnect بدون تغییر state
+- ارسال کارت‌های مخفی فقط برای صاحب دست
+- اعتبارسنجی سمت سرور برای Turn/Card/Follow Suit/Trump
+- event log schema
+- تست خودکار v31

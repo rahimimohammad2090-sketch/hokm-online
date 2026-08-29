@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>حکم آنلاین v23</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10251b;color:#fff;font-family:Tahoma,Arial,sans-serif}
+.app{max-width:520px;margin:auto;min-height:100vh;background:#17452d;display:flex;flex-direction:column}
+.top{padding:12px 14px;background:#0c2118;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.score{font-size:12px}.status{font-size:11px;color:#b9e7c9}
+.table{margin:10px;border-radius:24px;background:#17613c;min-height:430px;position:relative;box-shadow:inset 0 0 0 2px #237a50}
+.player{position:absolute;text-align:center;font-size:11px}.p0{bottom:4px;left:50%;transform:translateX(-50%)}.p1{right:4px;top:50%;transform:translateY(-50%)}.p2{top:4px;left:50%;transform:translateX(-50%)}.p3{left:4px;top:50%;transform:translateY(-50%)}
+.avatar{width:42px;height:42px;border-radius:50%;background:#ddd;margin:auto;border:3px solid #fff}.active .avatar{border-color:#ffd34d;box-shadow:0 0 12px #ffd34d}
+.trump{position:absolute;top:8px;right:10px;background:#0c2118;padding:7px 10px;border-radius:10px;font-size:12px}
+.trick{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:150px;height:120px}
+.played{position:absolute;background:white;color:#111;border-radius:8px;width:45px;height:62px;text-align:center;padding-top:9px;font-weight:bold;box-shadow:0 3px 8px #0008}
+.t0{bottom:0;left:53px}.t1{top:28px;right:0}.t2{top:0;left:53px}.t3{top:28px;left:0}
+.hand{display:flex;justify-content:center;gap:4px;padding:8px 6px 14px;direction:ltr;overflow-x:auto}
+.card{min-width:48px;height:70px;border:0;border-radius:8px;background:#fff;color:#111;font-weight:bold;font-size:15px;box-shadow:0 2px 5px #0007}.red{color:#c22}
+.card:active{transform:translateY(-4px)}.disabled{opacity:.4}
+.controls{display:flex;gap:6px;padding:0 10px 10px}.controls button{flex:1;padding:10px;border:0;border-radius:10px}
+.bottom{padding:8px 12px 18px;text-align:center;font-size:12px;color:#d9eee2}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><b>حکم آنلاین</b><span id="score" class="score">آماده ورود</span><span id="status" class="status">آفلاین</span></div>
+<div class="table">
+<div class="player p0" id="p0"><div class="avatar"></div><div>بازیکن ۱</div></div>
+<div class="player p1" id="p1"><div class="avatar"></div><div>بازیکن ۲</div></div>
+<div class="player p2" id="p2"><div class="avatar"></div><div>بازیکن ۳</div></div>
+<div class="player p3" id="p3"><div class="avatar"></div><div>بازیکن ۴</div></div>
+<div class="trump" id="trump">حکم: —</div>
+<div class="trick" id="trick"></div>
+</div>
+<div class="controls">
+<button onclick="demoConnect()">اتصال آزمایشی</button>
+<button onclick="toggleReady()">آماده</button>
+</div>
+<div class="hand" id="hand"></div>
+<div class="bottom" id="message">برای بازی واقعی، WebSocket سرور را در آدرس client تنظیم کنید.</div>
+</div>
+<script src="client_v23.js"></script>
+<script>
+let client=null, ready=false;
+const ui={
+ status:s=>document.getElementById("status").textContent=s,
+ error:s=>document.getElementById("message").textContent="خطا: "+s,
+ trickUpdate:m=>document.getElementById("message").textContent="حرکت ثبت شد",
+ gameFinished:()=>document.getElementById("message").textContent="بازی تمام شد",
+ render:(room,hand,me)=>{
+   if(!room)return;
+   document.getElementById("score").textContent=`دور: ${room.game?.round||"-"} | نوبت: ${room.game?.turn!=null?room.game.turn+1:"-"}`;
+   document.getElementById("trump").textContent="حکم: "+(room.game?.trump||"—");
+   room.players.forEach((p,i)=>{
+     const el=document.querySelector("#p"+i);
+     if(el) {
+       el.querySelector("div:last-child").textContent=p.name||("بازیکن "+(i+1));
+       el.classList.toggle("active",room.game?.turn===i);
+     }
+   });
+   const h=document.getElementById("hand"); h.innerHTML="";
+   hand.forEach(c=>{
+     const b=document.createElement("button");
+     b.className="card"+(["♥","♦"].includes(c.suit)?" red":"");
+     b.textContent=c.rank+c.suit;
+     const myTurn=room.game?.turn===me;
+     b.disabled=!myTurn;
+     b.onclick=()=>client.playCard(c);
+     h.appendChild(b);
+   });
+ }
+};
+function demoConnect(){
+  // برای اجرای واقعی: URL را به ws://HOST:3000 تغییر دهید.
+  try{
+    const proto=location.protocol==="https:"?"wss":"ws";
+    client=new HokmOnlineClient(`${proto}://${location.host}`,ui);
+    client.connect();
+  }catch(e){ui.error(e.message)}
+}
+function toggleReady(){
+  if(!client){ui.error("ابتدا اتصال را برقرار کنید");return}
+  ready=!ready; client.ready(ready);
+}
+</script>
+</body>
+</html>

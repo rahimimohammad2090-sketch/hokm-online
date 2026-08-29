@@ -1,0 +1,6 @@
+const assert=require("assert"),{AuthService}=require("./v35_auth"),{SessionManager}=require("./v35_session_manager"),{can,assertSeatOwner}=require("./v35_authorization"),{sanitizeString,validateAction,constantTimeEqual}=require("./v35_security");
+const a=new AuthService({secret:"x".repeat(48),ttlMs:1000}),t=a.sign({sub:"u1",role:"player"});assert.equal(a.verify(t).sub,"u1");assert.equal(a.verify(t,Date.now()+2001),null);assert.equal(a.verify(t.slice(0,-1)+"x"),null);
+const sm=new SessionManager({ttlMs:1000}),sid=sm.create("u1","player");assert.equal(sm.get(sid).userId,"u1");assert.equal(sm.get(sid,Date.now()+2001),null);
+assert(can("player","match:play"));assert(!can("spectator","match:play"));assert.throws(()=>assertSeatOwner({userId:"u2"},"u1"),/SEAT_FORBIDDEN/);assertSeatOwner({userId:"u1"},"u1");
+assert.equal(sanitizeString(" A\u0000B "),"AB");assert(validateAction({actionId:"abc_DEF-123",seq:1,type:"CARD_PLAYED"}));assert(!validateAction({actionId:"bad",seq:1,type:"CARD_PLAYED"}));assert(constantTimeEqual("abc","abc"));assert(!constantTimeEqual("abc","abd"));
+console.log("v35 auth + session + authorization + security tests: PASS");

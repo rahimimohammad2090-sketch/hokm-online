@@ -1,0 +1,1 @@
+Hokm Online v32: Event Store, snapshots, recovery, server-authoritative turn timer, timeout event, reconnect foundation, and integrity tests.

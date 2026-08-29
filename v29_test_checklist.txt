@@ -1,0 +1,14 @@
+v29 تست:
+[ ] چهار نفر دقیقاً Match شوند
+[ ] یک Match فقط یک Room بسازد
+[ ] Room Code یکتا باشد
+[ ] Seatها 0..3 و سروری باشند
+[ ] Token هر بازیکن متفاوت باشد
+[ ] Token بازیکن دیگر/Token مصرف‌شده رد شود
+[ ] قبل از اتصال ۴ نفر بازی شروع نشود
+[ ] اتصال ۴ نفر => READY_TO_START
+[ ] قطع اتصال قبل از شروع => WAITING_FOR_PLAYERS
+[ ] START فقط از READY_TO_START
+[ ] GAME_READY ترتیب Seat سروری بدهد
+[ ] Session معتبر الزامی باشد
+[ ] WSS/rate-limit/Redis در production

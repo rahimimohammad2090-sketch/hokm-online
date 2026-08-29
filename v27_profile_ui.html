@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>پروفایل حکم آنلاین v27</title>
+<style>
+body{margin:0;background:#10251b;color:#fff;font-family:Tahoma,Arial}
+.wrap{max-width:520px;margin:auto;padding:16px}
+.card{background:#17452d;border-radius:18px;padding:16px;margin-bottom:12px}
+h2{margin-top:0}.bar{height:10px;background:#0c2118;border-radius:8px;overflow:hidden}
+.fill{height:100%;width:65%;background:#e0bd43}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:#0c2118;padding:12px;border-radius:12px;text-align:center}
+.small{font-size:12px;color:#b9e7c9}
+</style>
+<div class="wrap">
+  <div class="card">
+    <h2 id="name">بازیکن</h2>
+    <div class="small">سطح <b id="level">1</b> — رتبه <b id="rating">1000</b></div>
+    <br><div class="bar"><div class="fill" id="xp"></div></div>
+    <div class="small" id="xpText"></div>
+  </div>
+  <div class="card grid" id="stats"></div>
+  <div class="card"><h3>افتخارات</h3><div id="ach">—</div></div>
+  <div class="card"><h3>جدول برترین‌ها</h3><div id="rank">—</div></div>
+</div>
+<script>
+async function load(token){
+  const h={Authorization:"Bearer "+token};
+  const p=await (await fetch("/api/profile",{headers:h})).json();
+  if(p.profile){
+    const x=p.profile;
+    name.textContent=x.display_name;
+    level.textContent=x.level; rating.textContent=x.rating;
+    xpText.textContent="XP: "+x.xp;
+    stats.innerHTML=
+      `<div class="stat">بازی<br><b>${x.games_played}</b></div>`+
+      `<div class="stat">برد<br><b>${x.games_won}</b></div>`+
+      `<div class="stat">نرخ برد<br><b>${x.win_rate}%</b></div>`+
+      `<div class="stat">برد متوالی<br><b>${x.streak}</b></div>`;
+  }
+  const a=await (await fetch("/api/achievements",{headers:h})).json();
+  ach.innerHTML=(a.items||[]).map(x=>`🏆 ${x.achievement_code}`).join("<br>")||"هنوز افتخاری باز نشده";
+  const r=await (await fetch("/api/leaderboard",{headers:h})).json();
+  rank.innerHTML=(r.items||[]).slice(0,10).map((x,i)=>
+    `${i+1}. ${x.display_name} — سطح ${x.level} — رتبه ${x.rating}`).join("<br>");
+}
+</script>
